@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.example.library</groupId>
+        <artifactId>example-library-spring-boot-starter-parent</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>example-library-spring-boot-starter</artifactId>
+    <packaging>jar</packaging>
+
+    <properties>
+        <!-- Prevent library from being repackaged as a 'fat jar' like a standalone app -->
+        <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
+
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.example.library</groupId>
+            <artifactId>example-library-spring-boot-starter-autoconfigure</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- NOTE:
+            This is a slightly clunky workaround for the 'spring-configuration-metadata.json'
+            file being generated in the 'example-library' jar and therefore not being directly
+            available in the classpath of the 'starter' jar where an IDE looks for it in order
+            to provide hints about the library configuration properties based on their javadoc.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-metadata</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/META-INF</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>../example-library/target/classes/META-INF</directory>
+                                    <includes>
+                                        <include>spring-configuration-metadata.json</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

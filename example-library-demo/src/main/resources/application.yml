@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: example-library-demo
+  mvc:
+    async:
+      request-timeout: 30s
+
+example-library:
+  enabled: true
+  timeout: 10s

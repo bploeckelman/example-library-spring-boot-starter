@@ -1,0 +1,5 @@
+### Basic API test
+GET http://localhost:8080/api/tests/timeout
+Accept: application/json
+
+###
